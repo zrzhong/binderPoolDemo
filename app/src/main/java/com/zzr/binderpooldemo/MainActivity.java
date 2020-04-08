@@ -1,10 +1,15 @@
 package com.zzr.binderpooldemo;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.MessageQueue;
 import android.os.RemoteException;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +20,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         new Thread(new WorkRun()).start();
+        ThreadLocal<Boolean> threadLocal = new ThreadLocal<>();
+        threadLocal.set(true);
+        Log.i(TAG, "onCreate: "+threadLocal.get());
+//        Looper
+        Handler handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                return false;
+            }
+        });
+//        handler.sendMessage()
     }
 
     private class WorkRun implements Runnable {
